@@ -2,18 +2,19 @@ version: "3"
 
 services:
     traefik:
-      image: traefik:v2.0
-      command: 
-          - "--api.insecure=true" 
-          - "--providers.docker=true"
-          - "--entrypoints.web.address=:1323"
-
-      ports: 
-          - "80:1323"
-          - "8080:8080"
-      volumes:
-        #- ./utils/traefik:/etc/traefik
-        - /var/run/docker.sock:/var/run/docker.sock
+        image: traefik:v2.0
+        command: 
+            - "--api.insecure=true" 
+            - "--providers.docker=true"
+            - "--entrypoints.web.address=:1323"
+        ports: 
+            - "80:1323"
+            - "8080:8080"
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock
+        networks:
+            - public
+            - internal
     lookup:
         build: lookup/.
         labels:
@@ -21,3 +22,9 @@ services:
             - "traefik.http.routers.lookup.rule=Host(`localhost`)"
             - "traefik.http.routers.lookup.entrypoints=web"
             - "traefik.port=1323"
+        networks:
+            - internal
+
+networks:
+   public:
+   internal:
