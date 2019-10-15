@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -105,6 +104,5 @@ func getCard(c echo.Context) error {
 
 	_ = json.Unmarshal([]byte(body), &cardObj)
 
-	fmt.Println(cardObj)
 	return c.JSON(http.StatusOK, cardObj)
 }
