@@ -2,4 +2,8 @@
 
 ## lookup
 
-Basic HTTP service that takes a GET with a URI of a card name, and looks up the card on scryfall
+Basic HTTP service that provides two HTTP GET endpoints:
+    * /:cardname (eg. opt or ajani+adversary+of+tyrants)
+    * /:setcode/:collector_number (eg. /dom/60 or /m19/3)
+
+Takes the variables and looks them up via the Scryfall API
