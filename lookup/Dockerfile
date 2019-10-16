@@ -6,6 +6,8 @@ COPY . .
 
 CMD go mod download
 
+RUN go test
+
 RUN CGO_ENABLED=0 go build -o lookup .
 
 FROM alpine

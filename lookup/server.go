@@ -74,12 +74,42 @@ type Card struct {
 
 func main() {
 	e := echo.New()
-	e.GET("/:card", getCard)
+	e.GET("/:card", getCardByName)
+	e.GET("/:set/:num", getCardBySetNum)
 	e.Logger.Fatal(e.Start(":1323"))
 }
 
-func getCard(c echo.Context) error {
+func getCardByName(c echo.Context) error {
 	url := "https://api.scryfall.com/cards/named?exact=" + c.Param("card")
+
+	tr := &http.Transport{
+		MaxIdleConns:       10,
+		IdleConnTimeout:    30 * time.Second,
+		DisableCompression: true,
+	}
+	client := &http.Client{Transport: tr}
+
+	resp, err := client.Get(url)
+	if err != nil {
+		log.Println(err)
+	}
+
+	defer resp.Body.Close()
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Println(err)
+	}
+
+	cardObj := Card{}
+
+	_ = json.Unmarshal([]byte(body), &cardObj)
+
+	return c.JSON(http.StatusOK, cardObj)
+}
+
+func getCardBySetNum(c echo.Context) error {
+	url := "https://api.scryfall.com/cards/" + c.Param("set") + "/" + c.Param("num")
 
 	tr := &http.Transport{
 		MaxIdleConns:       10,
