@@ -24,6 +24,19 @@ services:
             - "traefik.port=1323"
         networks:
             - internal
+    mongo:
+        image: mongo
+        networks: 
+            - internal
+    user_mgmt:
+        build: user_mgmt/.
+        depends_on:
+            - mongo
+        ports:
+            - 1323:1323
+        networks:
+            - public
+            - internal
 
 networks:
    public:
