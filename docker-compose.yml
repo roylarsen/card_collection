@@ -17,11 +17,6 @@ services:
             - internal
     lookup:
         build: lookup/.
-        labels:
-            - "traefik.enable=true"
-            - "traefik.http.routers.lookup.rule=Host(`localhost`)"
-            - "traefik.http.routers.lookup.entrypoints=web"
-            - "traefik.port=1323"
         networks:
             - internal
     mongo:
@@ -30,12 +25,14 @@ services:
             - internal
     user_mgmt:
         build: user_mgmt/.
+        labels:
+            - "traefik.enable=true"
+            - "traefik.http.routers.lookup.rule=Host(`localhost`)"
+            - "traefik.http.routers.lookup.entrypoints=web"
+            - "traefik.port=1323"
         depends_on:
             - mongo
-        ports:
-            - 1323:1323
         networks:
-            - public
             - internal
 
 networks:
