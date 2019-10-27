@@ -16,6 +16,16 @@ func main() {
 	//Initialize Echo
 	e := echo.New()
 	e.Use(middleware.Logger())
+	e.Use(middleware.JWTWithConfig(middleware.JWTConfig{
+		SigningKey: []byte(lib.Key),
+		Skipper: func(c echo.Context) bool {
+			// Skip authentication for and signup login requests
+			if c.Path() == "/login" || c.Path() == "/user_add" {
+				return true
+			}
+			return false
+		},
+	}))
 
 	//DB initialization
 	clientOptions := options.Client().ApplyURI("mongodb://mongo:27017")
@@ -35,7 +45,7 @@ func main() {
 	client := &lib.Handler{DB: clientObj}
 
 	// Initializing API endpoints
-	e.GET("/user_add", client.UserAdd)
-	e.GET("/login", client.Login)
+	e.POST("/user_add", client.UserAdd)
+	e.POST("/login", client.Login)
 	e.Logger.Fatal(e.Start(":1323"))
 }
