@@ -13,9 +13,10 @@ Takes the variables and looks them up via the Scryfall API
 
 Service for handling user management functions.
 
-Provides two POST endpoints:
+Provides three POST endpoints:
 * /user_add
 * /login
+* /add_card
 
 #### Notes:
 
