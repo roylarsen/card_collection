@@ -47,5 +47,6 @@ func main() {
 	// Initializing API endpoints
 	e.POST("/user_add", client.UserAdd)
 	e.POST("/login", client.Login)
+	e.POST("/add_card", client.AddCard)
 	e.Logger.Fatal(e.Start(":1323"))
 }

@@ -2,6 +2,8 @@ package lib
 
 import (
 	"context"
+	"encoding/json"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"time"
@@ -87,4 +89,65 @@ func (client *Handler) Login(c echo.Context) error {
 
 	a.PasswordHash = "redacted" // Don't send password
 	return c.JSON(http.StatusOK, a)
+}
+
+// AddCard takes a JWT and card info and adds the card to your collection
+func (client *Handler) AddCard(c echo.Context) error {
+	postData := echo.Map{}
+
+	tr := &http.Transport{
+		MaxIdleConns:       10,
+		IdleConnTimeout:    30 * time.Second,
+		DisableCompression: true,
+	}
+	httpClient := &http.Client{Transport: tr}
+
+	if err := c.Bind(&postData); err != nil {
+		return err
+	}
+
+	if _, ok := postData["Name"]; ok {
+		url := "http://lookup:1323/" + string(postData["Name"].(string))
+		resp, err := httpClient.Get(url)
+		if err != nil {
+			log.Println(err)
+		}
+
+		defer resp.Body.Close()
+
+		body, err := ioutil.ReadAll(resp.Body)
+		if err != nil {
+			log.Println(err)
+		}
+
+		cardData := echo.Map{}
+
+		_ = json.Unmarshal([]byte(body), &cardData)
+		return c.JSON(http.StatusOK, cardData)
+	} else if _, ok = postData["Set"]; ok {
+		url := "http://lookup:1323/" + string(postData["Set"].(string)) + "/" + string(postData["Num"].(string))
+		resp, err := httpClient.Get(url)
+		if err != nil {
+			log.Println(err)
+		}
+
+		defer resp.Body.Close()
+
+		body, err := ioutil.ReadAll(resp.Body)
+		if err != nil {
+			log.Println(err)
+		}
+
+		cardData := echo.Map{}
+
+		_ = json.Unmarshal([]byte(body), &cardData)
+		return c.JSON(http.StatusOK, cardData)
+	}
+	return &echo.HTTPError{Code: http.StatusInternalServerError, Message: "No proper card data"}
+}
+
+func userIDFromToken(c echo.Context) string {
+	account := c.Get("user").(*jwt.Token)
+	claims := account.Claims.(jwt.MapClaims)
+	return claims["id"].(string)
 }
