@@ -9,8 +9,8 @@ jobs:
     steps:
       - name: print info
         run: |
-          echo ${ event_name }
-          echo ${ event_path }
+          echo $event_name
+          echo $event_path
         env:
           event_name: ${{ github.GITHUB_EVENT_NAME }}
           event_path: ${{ github.GITHUB_EVENT_PATH }}
