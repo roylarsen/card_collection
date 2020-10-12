@@ -7,10 +7,7 @@ jobs:
   deploy:
     runs-on: ubuntu-20.04
     steps:
-      - name: print info
-        run: |
-          echo $event_name
-          echo $event_path
+      - name: Dump GitHub context
         env:
-          event_name: ${{ github.GITHUB_EVENT_NAME }}
-          event_path: ${{ github.GITHUB_EVENT_PATH }}
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo "$GITHUB_CONTEXT"
