@@ -10,7 +10,7 @@ jobs:
         id: deploy-environment  
         env:
           PAYLOAD: ${{ toJson(github.event.deployment.payload) }}
-          ENVIRONMENT: ${{ toJson(github.event.deployment.environment) }}
+          ENVIRONMENT: ${{ github.event.deployment.environment }}
           ID: ${{ toJson(github.event.deployment.id) }}
         run: |
           echo ::set-output name=environment::$ENVIRONMENT
@@ -23,7 +23,7 @@ jobs:
   Deploy-Production:
     needs: get-deployment
     runs-on: ubuntu-20.04
-    if: ${{ needs.get-deployment.outputs.environment == 'production' }}
+    if: ${{ needs.get-deployment.outputs.environment == '"production"' }}
     steps:
       - name: Run Deployment
         run: |
@@ -35,7 +35,7 @@ jobs:
   Deploy-Development:
     needs: get-deployment
     runs-on: ubuntu-20.04
-    if: ${{ needs.get-deployment.outputs.environment == 'development' }}
+    if: ${{ needs.get-deployment.outputs.environment == '"development"' }}
     steps:
       - name: Run Deployment
         run: |
