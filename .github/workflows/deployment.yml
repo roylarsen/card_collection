@@ -1,7 +1,7 @@
 name: testing deployment workflows
 on:
   deployment:
-    environment: production
+    github.event.deployment.environment: production
 
 jobs:
   deploy:
@@ -9,5 +9,5 @@ jobs:
     steps:
       - name: Dump GitHub context
         env:
-          GITHUB_CONTEXT: ${{ toJson(github.event.deployment) }}
+          GITHUB_CONTEXT: ${{ toJson(github.event.deployment.payload) }}
         run: echo "$GITHUB_CONTEXT"
