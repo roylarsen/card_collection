@@ -9,5 +9,5 @@ jobs:
     steps:
       - name: Dump GitHub context
         env:
-          GITHUB_CONTEXT: ${{ toJson(github) }}
+          GITHUB_CONTEXT: ${{ toJson(github.event.deployment) }}
         run: echo "$GITHUB_CONTEXT"
