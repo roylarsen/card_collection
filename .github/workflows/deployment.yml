@@ -1,13 +1,43 @@
 name: testing deployment workflows
 on:
-  deployment:
-    github.event.deployment.environment: production
+  deployment
 
 jobs:
-  deploy:
+  get-deployment:
     runs-on: ubuntu-20.04
     steps:
       - name: Dump GitHub context
+        id: deploy-environment  
         env:
-          GITHUB_CONTEXT: ${{ toJson(github.event.deployment.payload) }}
-        run: echo "$GITHUB_CONTEXT"
+          PAYLOAD: ${{ toJson(github.event.deployment.payload) }}
+          ENVIRONMENT: ${{ toJson(github.event.deployment.environment) }}
+          ID: ${{ toJson(github.event.deployment.id) }}
+        run: |
+          echo ::set-output name=environment::$ENVIRONMENT
+          echo ::set-output name=payload::$PAYLOAD
+          echo ::set-output name=id::$ID
+    outputs:
+        PAYLOAD: ${{ steps.deploy-environment.outputs.payload }}
+        ENVIRONMENT: ${{ steps.deploy-environment.outputs.environment }}
+        ID: ${{ steps.deploy-environment.outputs.id}}
+  Deploy-Production:
+    needs: get-deployment
+    runs-on: ubuntu-20.04
+    if: ${{ needs.get-deployment.outputs.environment == "production"}}
+    steps:
+      - name: Run Deployment
+        run: |
+          echo "Production!"
+          echo "${{ needs.get-deployment.outputs.id}}"
+          echo "${{ needs.get-deployment.outputs.payload }}"
+      
+  Deploy-Development:
+    needs: get-deployment
+    runs-on: ubuntu-20.04
+    if: ${{ needs.get-deployment.outputs.environment == "development"}}
+    steps:
+      - name: Run Deployment
+        run: |
+          echo "Development!"
+          echo "${{ needs.get-deployment.outputs.id}}"
+          echo "${{ needs.get-deployment.outputs.payload }}"
