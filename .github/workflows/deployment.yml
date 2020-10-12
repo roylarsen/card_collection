@@ -23,7 +23,7 @@ jobs:
   Deploy-Production:
     needs: get-deployment
     runs-on: ubuntu-20.04
-    #if: needs.get-deployment.outputs.environment == "production"
+    if: ${{ needs.get-deployment.outputs.environment }} == ""production""
     steps:
       - name: Run Deployment
         run: |
@@ -35,7 +35,7 @@ jobs:
   Deploy-Development:
     needs: get-deployment
     runs-on: ubuntu-20.04
-    #if: needs.get-deployment.outputs.environment == "development"
+    if: ${{ needs.get-deployment.outputs.environment }} == ""development""
     steps:
       - name: Run Deployment
         run: |
