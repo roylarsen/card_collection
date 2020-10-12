@@ -9,5 +9,8 @@ jobs:
     steps:
       - name: print info
         run: |
-          python3 -c print(${{ GITHUB_EVENT_NAME }})
-          python3 -c print(${{ GITHUB_EVENT_PATH }})
+          echo ${ event_name }
+          echo ${ event_path }
+        env:
+          event_name: ${{ github.GITHUB_EVENT_NAME }}
+          event_path: ${{ github.GITHUB_EVENT_PATH }}
