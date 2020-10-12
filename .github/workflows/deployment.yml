@@ -23,18 +23,19 @@ jobs:
   Deploy-Production:
     needs: get-deployment
     runs-on: ubuntu-20.04
-    if: needs.get-deployment.outputs.environment == "production"
+    #if: needs.get-deployment.outputs.environment == "production"
     steps:
       - name: Run Deployment
         run: |
           echo "Production!"
+          echo "${{ needs.get-deployment.outputs.environment }}"
           echo "${{ needs.get-deployment.outputs.id}}"
           echo "${{ needs.get-deployment.outputs.payload }}"
       
   Deploy-Development:
     needs: get-deployment
     runs-on: ubuntu-20.04
-    if: needs.get-deployment.outputs.environment == "development"
+    #if: needs.get-deployment.outputs.environment == "development"
     steps:
       - name: Run Deployment
         run: |
