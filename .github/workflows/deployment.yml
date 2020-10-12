@@ -1,0 +1,13 @@
+name: testing deployment workflows
+on:
+  deployment:
+    envronment: production
+
+jobs:
+  deploy:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: print info
+        run: |
+          echo ${{ github.GITHUB_EVENT_NAME }}
+          echo ${{ github.GITHUB_EVENT_PATH }}
