@@ -52,8 +52,7 @@ jobs:
           route: POST /repos/:repository/deployments/:deployment/statuses
           repository: ${{ github.repository }}
           deployment: ${{ needs.get-deployment.outputs.id }}
-          environment: dev
-          environment_url: https://example.com
+          environment: ${{ needs.get-deployment.outputs.environment }}
           log_url: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
           mediaType: '{"previews": ["ant-man"]}'
           state: success
@@ -68,8 +67,7 @@ jobs:
           route: POST /repos/:repository/deployments/:deployment/statuses
           repository: ${{ github.repository }}
           deployment: ${{ needs.get-deployment.outputs.id }}
-          environment: dev
-          environment_url: https://example.com
+          environment: ${{ needs.get-deployment.outputs.environment }}
           log_url: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
           mediaType: '{"previews": ["ant-man"]}'
           state: failure
